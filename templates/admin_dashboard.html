@@ -1,0 +1,118 @@
+<!-- <!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - Poll Results</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    h1, h2 { text-align: center; color: #222; }
+    .poll-container {
+      max-width: 800px;
+      margin: 20px auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 25px;
+    }
+    .option {
+      margin-bottom: 15px;
+      padding: 10px;
+      border-left: 4px solid #0077cc;
+      background: #fafafa;
+      border-radius: 6px;
+    }
+    .voters {
+      font-size: 14px;
+      color: #555;
+      margin-top: 5px;
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #0077cc;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .back-link:hover { color: #005fa3; }
+  </style>
+</head>
+<body>
+  <h1>Admin Dashboard</h1>
+
+  {% for poll in polls %}
+  <div class="poll-container">
+    <h2>{{ poll.question }}</h2>
+    <p><strong>Total votes:</strong> {{ poll.total_votes }}</p>
+
+    {% for option in poll.options %}
+      <div class="option">
+        <strong>{{ option.option_text }}</strong> ({{ option.vote_count }} votes)
+        <div class="voters">
+          Voters: {% if option.voters %} {{ option.voters | join(', ') }} {% else %} None {% endif %}
+        </div>
+        {% if option.agenda %}
+          <div class="agenda">Agenda: {{ option.agenda }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+
+  <a class="back-link" href="{{ url_for('dashboard') }}">← Back to User Dashboard</a>
+</body>
+</html> -->
+
+
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <style>
+    body { font-family: "Segoe UI", Tahoma, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; color: #333; }
+    h1 { text-align: center; color: #222; }
+    .poll-container { max-width: 800px; margin: 20px auto; background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .option { margin-left: 20px; margin-bottom: 10px; }
+    .voters { margin-left: 20px; font-style: italic; color: #555; }
+    a { display: inline-block; margin-top: 15px; text-decoration: none; color: #0077cc; font-weight: 500; }
+    a:hover { color: #005fa3; }
+  </style>
+</head>
+<body>
+  <h1>Admin Dashboard</h1>
+  {% for poll in polls %}
+<div class="poll">
+    <h3>{{ poll.question }}</h3>
+    <p>Total votes so far: {{ poll.total_votes }}</p>
+    <ul>
+        {% for option in poll.options %}
+        <li>
+            {{ option.option_text }} ({{ option.vote_count }} votes)
+            <br>
+            Agenda: {{ option.agenda }}
+            <br>
+            Voters:
+            {% if option.voters %}
+                {{ option.voters | join(', ') }}
+            {% else %}
+                No votes yet
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endfor %}
+
+    </div>
+  {% endfor %}
+  <a href="{{ url_for('dashboard') }}">← Back to Dashboard</a>
+</body>
+</html>

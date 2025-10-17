@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Poll: {{ poll.question }}</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+      display: flex;
+      justify-content: center;
+    }
+
+    .poll-container {
+      background: #fff;
+      max-width: 700px;
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      padding: 25px;
+      margin-top: 30px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #222;
+    }
+
+    .total-votes {
+      font-weight: 500;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    form {
+      margin-bottom: 20px;
+    }
+
+    .option-label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .option-label input[type="radio"] {
+      margin-right: 10px;
+      width: 18px;
+      height: 18px;
+      accent-color: #0077cc;
+      cursor: pointer;
+    }
+
+    .agenda {
+      margin-left: 28px;
+      font-style: italic;
+      margin-bottom: 15px;
+      color: #555;
+    }
+
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #0077cc;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      display: block;
+      margin: 15px auto;
+    }
+
+    button:hover {
+      background: #005fa3;
+      transform: translateY(-2px);
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 10px;
+      color: #0077cc;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .back-link:hover {
+      color: #005fa3;
+    }
+
+    /* Flash messages */
+    .messages {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .messages li {
+      list-style: none;
+      color: red;
+      font-weight: 500;
+      margin: 4px 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .poll-container {
+        padding: 20px;
+      }
+
+      .option-label {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .agenda {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="poll-container">
+    <h2>{{ poll.question }}</h2>
+    <p class="total-votes"><strong>Total votes so far:</strong> {{ total_votes }}</p> {% if existing_vote %} <p>You have
+      already voted. Here are the results:</p>
+    <ul> {% for option in poll.options %} <li> <strong>{{ option.option_text }}</strong><br>
+        <div class="agenda">Agenda: {{ option.agenda or 'No agenda provided.' }}</div>
+      </li> {% endfor %} </ul> <a class="back-link" href="{{ url_for('dashboard') }}">Back to Dashboard</a> {% else %}
+    <form method="POST"> {% for option in poll.options %} <label class="option-label"> <input type="radio" name="option"
+          value="{{ option.id }}" required> {{ option.option_text }} </label>
+      <div class="agenda">Agenda: {{ option.agenda or 'No agenda provided.' }}</div> {% endfor %} <button
+        type="submit">Vote</button>
+    </form> <a class="back-link" href="{{ url_for('dashboard') }}">Back to Dashboard</a> {% endif %} {% with messages =
+    get_flashed_messages() %} {% if messages %} <div class="messages">
+      <ul> {% for message in messages %} <li>{{ message }}</li> {% endfor %} </ul>
+    </div> {% endif %} {% endwith %}
+  </div>
+</body>
+</html>
+
+

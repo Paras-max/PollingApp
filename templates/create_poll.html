@@ -1,0 +1,232 @@
+
+
+
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create New Poll</title>
+  <style>
+    /* Global Styles */
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #222;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #0077cc;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+    a:hover {
+      color: #005fa3;
+    }
+
+    /* Form Container */
+    form {
+      max-width: 700px;
+      margin: 20px auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      padding: 25px;
+    }
+
+    label {
+      font-weight: 500;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-top: 4px;
+      font-size: 15px;
+      transition: border 0.2s;
+    }
+    input[type="text"]:focus, textarea:focus {
+      border-color: #0077cc;
+      outline: none;
+    }
+
+    /* Option Groups */
+    .option-group {
+      background: #fafafa;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    /* Buttons */
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    #add-option-btn {
+      background: #0077cc;
+      color: #fff;
+      margin-bottom: 15px;
+    }
+    #add-option-btn:hover {
+      background: #005fa3;
+      transform: translateY(-2px);
+    }
+
+    button[type="submit"] {
+      background: #28a745;
+      color: #fff;
+      display: block;
+      margin: 0 auto;
+    }
+    button[type="submit"]:hover {
+      background: #218838;
+      transform: translateY(-2px);
+    }
+
+    .remove-option-btn {
+      margin-top: 10px;
+      background: #dc3545;
+      color: #fff;
+      font-size: 14px;
+    }
+    .remove-option-btn:hover {
+      background: #b02a37;
+    }
+
+    /* Flash Messages */
+    ul {
+      list-style: none;
+      padding: 0;
+      text-align: center;
+    }
+    li {
+      margin: 5px 0;
+      font-weight: 500;
+      color: red;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      form {
+        padding: 15px;
+      }
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Create New Poll</h1>
+  <form method="POST">
+      <p>
+          <label for="question">Poll Question:</label>
+          <input type="text" id="question" name="question" required>
+      </p>
+
+      <h2>Options:</h2>
+      <div id="options-container">
+          <div class="option-group">
+              <p>
+                  <label>Option 1:</label>
+                  <input type="text" name="options" required>
+              </p>
+              <p>
+                  <label>Agenda for Option 1:</label>
+                  <textarea name="agendas" rows="3"></textarea>
+              </p>
+          </div>
+          <div class="option-group">
+              <p>
+                  <label>Option 2:</label>
+                  <input type="text" name="options" required>
+              </p>
+              <p>
+                  <label>Agenda for Option 2:</label>
+                  <textarea name="agendas" rows="3"></textarea>
+              </p>
+          </div>
+      </div>
+      <button type="button" id="add-option-btn">+ Add Another Option</button>
+      <p><button type="submit">✅ Create Poll</button></p>
+  </form>
+
+  <a href="{{ url_for('dashboard') }}">← Back to Dashboard</a>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addOptionBtn = document.getElementById('add-option-btn');
+        const optionsContainer = document.getElementById('options-container');
+        let optionCount = 2; // Start from 2 as two options are already present
+
+        addOptionBtn.addEventListener('click', function() {
+            optionCount++;
+            const newOptionGroup = document.createElement('div');
+            newOptionGroup.classList.add('option-group');
+            newOptionGroup.innerHTML = `
+                <p>
+                    <label>Option ${optionCount}:</label>
+                    <input type="text" name="options" required>
+                </p>
+                <p>
+                    <label>Agenda for Option ${optionCount}:</label>
+                    <textarea name="agendas" rows="3"></textarea>
+                </p>
+                <button type="button" class="remove-option-btn">Remove Option</button>
+            `;
+            optionsContainer.appendChild(newOptionGroup);
+        });
+
+        optionsContainer.addEventListener('click', function(event) {
+            if (event.target.classList.contains('remove-option-btn')) {
+                const currentOptions = optionsContainer.querySelectorAll('.option-group');
+                if (currentOptions.length > 2) {
+                    event.target.closest('.option-group').remove();
+                    let currentCount = 1;
+                    optionsContainer.querySelectorAll('.option-group').forEach(group => {
+                        group.querySelectorAll('label')[0].textContent = `Option ${currentCount}:`;
+                        group.querySelectorAll('label')[1].textContent = `Agenda for Option ${currentCount}:`;
+                        currentCount++;
+                    });
+                    optionCount = currentCount - 1;
+                } else {
+                    alert('You must have at least two options.');
+                }
+            }
+        });
+    });
+  </script>
+</body>
+</html>

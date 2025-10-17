@@ -1,0 +1,37 @@
+<!-- <!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Poll Results</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f6f9; padding: 20px; }
+    .poll-card { background: #fff; padding: 20px; margin-bottom: 20px; border-radius: 10px; }
+    h2 { color: #0077cc; }
+    .option { margin: 10px 0; padding: 10px; border-left: 4px solid #0077cc; background: #fafafa; }
+    .voters { font-size: 14px; margin-left: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Admin Panel - Poll Results</h1>
+  {% for poll in polls %}
+    <div class="poll-card">
+      <h2>{{ poll.question }}</h2>
+      <p><strong>Total Votes:</strong> {{ poll.total_votes }}</p>
+      {% for option in poll.options %}
+        <div class="option">
+          <strong>{{ option.option_text }}</strong> <br>
+          <em>Agenda:</em> {{ option.agenda or 'No agenda provided.' }} <br>
+          <div class="voters">
+            <em>Voted by:</em>
+            {% if option.voters %}
+              {{ option.voters | join(', ') }}
+            {% else %}
+              No votes yet
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+</body>
+</html> -->
